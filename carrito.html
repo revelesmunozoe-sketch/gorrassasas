@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carrito | CapZone</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <div class="header-content" style="display:flex;align-items:center;justify-content:space-between;gap:24px;">
+            <div style="display:flex;align-items:center;gap:14px;width:320px;min-width:280px;max-width:700px;">
+                <img id="site-logo-img" src="img/IMG_1261.jpeg" alt="Logo CapZone" style="width:100%;height:auto;display:block;border-radius:10px;box-shadow:0 2px 8px #0001;margin-left:0;">
+            </div>
+            <nav aria-label="Menú principal">
+                <ul class="nav-list">
+                    <li><a href="index.html">Inicio</a></li>
+                    <li><a href="productos.html">Productos</a></li>
+                    <li><a href="carrito.html" class="active" aria-current="page">Carrito <span id="cart-count" style="background:var(--accent);color:#fff;padding:2px 8px;border-radius:12px;font-size:0.9em;margin-left:2px;">0</span></a></li>
+                    <li><a href="contacto.html">Contacto</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <main class="container minimal-cart">
+        <h2 class="cart-title">🛒 Tu Carrito</h2>
+        <div id="carrito-vacio" class="cart-empty">El carrito está vacío.</div>
+        <table id="carrito-tabla" class="carrito-tabla minimal-table">
+            <thead>
+                <tr>
+                    <th>Imagen</th>
+                    <th>Producto</th>
+                    <th>Detalles</th>
+                    <th>Cant.</th>
+                    <th>Subtotal</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="carrito-tbody"></tbody>
+        </table>
+        <div id="carrito-total" class="cart-total">Total: $0.00</div>
+        <button class="btn-primary minimal-btn" id="finalizar-compra">Finalizar compra</button>
+    </main>
+    <footer>
+        <div class="container footer-content">
+            <p>&copy; 2025 CapZone. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+    <script>
+    // Mostrar productos del carrito desde localStorage en tabla
+    function cargarCarrito() {
+        const tbody = document.getElementById('carrito-tbody');
+        const tabla = document.getElementById('carrito-tabla');
+        const total = document.getElementById('carrito-total');
+        const vacio = document.getElementById('carrito-vacio');
+        let carrito = JSON.parse(localStorage.getItem('carritoCapZone') || '[]');
+        tbody.innerHTML = '';
+        let suma = 0;
+        if(carrito.length === 0) {
+            vacio.style.display = '';
+            tabla.style.display = 'none';
+            total.textContent = 'Total: $0.00';
+        } else {
+            vacio.style.display = 'none';
+            tabla.style.display = '';
+            carrito.forEach(item => {
+                suma += item.precio * item.cantidad;
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><img src='${item.img}' style='width:50px;height:50px;border-radius:4px;'></td>
+                    <td style='font-weight:bold;'>${item.nombre}</td>
+                    <td style='font-size:0.95em;color:#888;'>${item.detalles ? item.detalles : ''}</td>
+                    <td>x${item.cantidad}</td>
+                    <td style='font-weight:bold;color:var(--accent);'>$${(item.precio*item.cantidad).toFixed(2)}</td>
+                    <td><button class='remove-item' data-nombre='${item.nombre}' style='background:none;border:none;color:var(--accent);font-size:1.2em;cursor:pointer;'>&times;</button></td>
+                `;
+                tbody.appendChild(tr);
+            });
+            total.textContent = 'Total: $' + suma.toFixed(2);
+        }
+        document.querySelectorAll('.remove-item').forEach(btn => {
+            btn.onclick = () => {
+                carrito = carrito.filter(i => i.nombre !== btn.dataset.nombre);
+                localStorage.setItem('carritoCapZone', JSON.stringify(carrito));
+                cargarCarrito();
+            };
+        });
+        // Actualizar contador header
+        document.getElementById('cart-count').textContent = carrito.reduce((a, b) => a + b.cantidad, 0);
+    }
+    cargarCarrito();
+    document.getElementById('finalizar-compra').onclick = () => {
+        alert('¡Gracias por tu compra!');
+        localStorage.removeItem('carritoCapZone');
+        cargarCarrito();
+    };
+    window.addEventListener('storage', cargarCarrito);
+
+    const siteLogoImg = document.getElementById('site-logo-img');
+    function loadLogo() {
+        const data = localStorage.getItem('siteLogo');
+        if (data) {
+            siteLogoImg.src = data;
+            siteLogoImg.style.display = '';
+        } else {
+            siteLogoImg.style.display = 'none';
+        }
+    }
+    document.addEventListener('DOMContentLoaded', loadLogo);
+    </script>
+    <style>
+    body { background: var(--bg); color: var(--text); }
+    .container.minimal-cart {
+        background: var(--bg-card,#232323);
+        border-radius: var(--radius,14px);
+        box-shadow: none;
+        padding: 32px 10px;
+        max-width: 520px;
+        margin: 40px auto 0 auto;
+    }
+    .cart-title {
+        color: var(--accent,#c62828);
+        font-size: 1.7rem;
+        margin-bottom: 18px;
+        text-align: center;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+    }
+    .cart-empty {
+        display: none;
+        font-size: 1.1em;
+        color: var(--text-light,#bdbdbd);
+        text-align: center;
+        margin: 32px 0;
+    }
+    .minimal-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 18px;
+        background: none;
+        box-shadow: none;
+        border-radius: var(--radius,14px);
+        overflow: hidden;
+    }
+    .minimal-table th, .minimal-table td {
+        border-bottom: 1px solid var(--border,#333);
+        padding: 10px 4px;
+        text-align: center;
+        font-size: 1em;
+        color: var(--text,#f5f5f5);
+    }
+    .minimal-table th {
+        background: none;
+        color: var(--accent,#c62828);
+        font-weight: 600;
+        border-bottom: 2px solid var(--accent,#c62828);
+    }
+    .minimal-table tr:last-child td { border-bottom: none; }
+    .minimal-table img { box-shadow: none; border-radius: 8px; width: 38px; height: 38px; object-fit: cover; }
+    .remove-item { background: none; border: none; color: var(--accent,#c62828); font-size: 1.3em; cursor: pointer; transition: color 0.2s; }
+    .remove-item:hover { color: var(--accent-dark,#8b0000); }
+    .cart-total {
+        font-weight: 600;
+        margin-top: 18px;
+        font-size: 1.1em;
+        text-align: right;
+        color: var(--accent,#c62828);
+    }
+    .minimal-btn {
+        margin-top: 18px;
+        display: block;
+        width: 100%;
+        padding: 12px 0;
+        font-size: 1em;
+        border-radius: var(--radius,10px);
+        background: var(--accent,#c62828);
+        color: #fff;
+        font-weight: 600;
+        box-shadow: none;
+        border: none;
+        transition: background 0.2s, transform 0.2s;
+    }
+    .minimal-btn:active { background: var(--accent-dark,#8b0000); transform: scale(0.97); }
+    </style>
+</body>
+</html>

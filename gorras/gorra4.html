@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gorra Barbas Hats x CT "GALAXY CT" GOLD 24K PLATED | CapZone</title>
+    <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+    <header>
+        <div class="header-content" style="display:flex;align-items:center;justify-content:space-between;gap:24px;">
+            <div style="display:flex;align-items:center;gap:14px;width:320px;min-width:280px;max-width:700px;">
+                <img id="site-logo-img" src="E:\pagina gorras\IMG_1261.jpeg" alt="Logo CapZone" style="width:100%;height:auto;display:block;border-radius:10px;box-shadow:0 2px 8px #0001;margin-left:0;">
+            </div>
+            <nav aria-label="Menú principal">
+                <ul class="nav-list">
+                    <li><a href="../index.html">Inicio</a></li>
+                    <li><a href="../productos.html">Productos</a></li>
+                    <li><a href="../carrito.html">Carrito <span id="cart-count" style="background:var(--accent);color:#fff;padding:2px 8px;border-radius:12px;font-size:0.9em;margin-left:2px;">0</span></a></li>
+                    <li><a href="../contacto.html">Contacto</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <main class="container">
+        <h2>Gorra Barbas Hats x CT "GALAXY CT" GOLD 24K PLATED</h2>
+        <img src="E:\pagina gorras\a942fc97-e181-46de-af22-cf9da20754b3.webp" alt="Gorra 4" style="max-width:300px;border-radius:12px;box-shadow:0 2px 12px #0002;">
+        <ul>
+            <li><strong>Tipo:</strong> Snapback</li>
+            <li><strong>Precio:</strong> $999.99 USD</li>
+            <li><strong>Colores:</strong> negro</li>
+            <li><strong>Descripcion:</strong> Colaboración exclusiva entre Barbas Hats y Corridos Tumbados, el sello de Natanael Cano.</li>
+        </ul>
+        <a href="#" class="btn-comprar" data-nombre="Gorra 4" data-precio="999.99" data-img="E:\pagina gorras\a942fc97-e181-46de-af22-cf9da20754b3.webp" style="margin-top:18px;">Agregar al Carrito</a>
+    </main>
+    <footer>
+        <p>&copy; 2025 CapZone. Todos los derechos reservados.</p>
+    </footer>
+    <script>
+    function actualizarCarritoHeader() {
+        let carrito = JSON.parse(localStorage.getItem('carritoCapZone') || '[]');
+        const el = document.getElementById('cart-count');
+        if (el) el.textContent = carrito.reduce((a, b) => a + (b.cantidad || 0), 0);
+    }
+    actualizarCarritoHeader();
+    window.addEventListener('storage', actualizarCarritoHeader);
+
+    document.querySelectorAll('.btn-comprar').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            let carrito = JSON.parse(localStorage.getItem('carritoCapZone') || '[]');
+            const nombre = btn.dataset.nombre || (document.querySelector('h2, h1, h3')?.textContent.trim()) || 'Producto';
+            const precio = parseFloat(btn.dataset.precio) || parseFloat((document.querySelector('.accent')?.textContent || '').replace(/[^\d.]/g, '')) || 0;
+            let img = btn.dataset.img || (document.querySelector('img')?.src) || '';
+            if(img.startsWith('../')) img = img.replace('../', 'img/');
+            if(img.startsWith('E:/pagina gorras/')) img = 'img/' + img.split('/').pop();
+            const detalles = btn.dataset.detalles || '';
+            const idx = carrito.findIndex(item => item.nombre === nombre);
+            if(idx > -1) { carrito[idx].cantidad = (carrito[idx].cantidad || 0) + 1; }
+            else { carrito.push({nombre, precio, img, detalles, cantidad:1}); }
+            localStorage.setItem('carritoCapZone', JSON.stringify(carrito));
+            actualizarCarritoHeader();
+            alert('¡Producto añadido al carrito!');
+        });
+    });
+    </script>
+</body>
+</html>

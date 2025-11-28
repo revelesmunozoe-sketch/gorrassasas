@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <!--
+        HEAD: Metadatos, título, descripción, favicon y enlace a la hoja de estilos principal.
+        Aquí se definen los datos que ayudan al SEO y la apariencia general del sitio.
+    -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CapZone | Inicio</title>
+    <meta name="description" content="CapZone: Gorras de alta calidad. Colecciones 2024, ofertas especiales y envíos. Encuentra la gorra perfecta para tu estilo.">
+    <meta name="theme-color" content="#ffffff">
+    <link rel="icon" href="favicon.ico">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <div class="header-content" style="display:flex;align-items:center;justify-content:space-between;gap:24px;">
+            <div style="display:flex;align-items:center;gap:14px;width:320px;min-width:280px;max-width:700px;">
+                <img id="site-logo-img" src="E:\pagina gorras\IMG_1261.jpeg" alt="Logo CapZone" style="width:100%;height:auto;display:block;border-radius:10px;box-shadow:0 2px 8px #0001;margin-left:0;">
+            </div>
+            <!--
+                NAV: Menú de navegación principal.
+                Permite acceder a las páginas clave del sitio: inicio, productos, carrito y contacto.
+            -->
+            <nav aria-label="Menú principal">
+                <ul class="nav-list">
+                    <li><a href="index.html" class="active" aria-current="page">Inicio</a></li>
+                    <li><a href="productos.html">Productos</a></li>
+                    <li><a href="carrito.html" id="cart-link">Carrito <span id="cart-count" style="background:var(--accent);color:#fff;padding:2px 8px;border-radius:12px;font-size:0.9em;margin-left:2px;">0</span></a></li>
+                    <li><a href="contacto.html">Contacto</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main id="main-content" class="container minimal-main">
+        <!--
+            HERO: Sección principal de bienvenida.
+            Presenta el eslogan, una breve descripción y un botón para ver el catálogo completo.
+        -->
+        <section class="hero minimal-hero" aria-labelledby="hero-title">
+            <h2 id="hero-title" class="minimal-title">Estilo en tu cabeza. <span class="accent">¡Nuevas Colecciones 2024!</span></h2>
+            <p class="minimal-desc">Descubre gorras exclusivas que definen tu <span class="accent">look</span>. Máxima calidad y diseño.</p>
+            <a href="productos.html" class="btn-primary minimal-btn" aria-label="Ver catálogo completo">Ver Catálogo Completo</a>
+        </section>
+
+        <!--
+            CARRUSEL DESTACADO: Muestra novedades o productos destacados en formato de carrusel.
+            Incluye controles para navegar entre los productos destacados.
+        -->
+        <section class="carrusel minimal-carrusel" aria-label="Carrusel de novedades" style="background:linear-gradient(90deg,#232323 60%,#c62828 100%);border-radius:18px;box-shadow:0 4px 32px #c6282822;padding:32px 0;margin-bottom:32px;">
+            <h3 class="accent" style="margin-bottom:18px;font-size:1.5em;text-align:center;">Novedades</h3>
+            <div class="carrusel-contenedor" style="display:flex;align-items:center;justify-content:center;gap:18px;">
+                <button class="carrusel-btn prev" aria-label="Anterior" tabindex="0" style="background:#fff;border:none;border-radius:50%;width:44px;height:44px;font-size:2em;color:#c62828;box-shadow:0 2px 8px #0002;cursor:pointer;">&#10094;</button>
+                <div class="carrusel-items" style="display:flex;overflow:hidden;min-width:320px;max-width:520px;position:relative;">
+                    <a href="gorras/gorra1.html" class="carrusel-item active" role="group" aria-label="Edición Cbtis 225" style="flex:1;transition:transform 0.6s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;align-items:center;justify-content:center;text-decoration:none;position:absolute;left:0;top:0;width:100%;opacity:1;">
+                        <img src="E:/pagina gorras/Gemini_Generated_Image_cswf46cswf46cswf.png" alt="Gorra edición limitada 1" style="max-width:320px;border-radius:18px;box-shadow:0 4px 24px #0004;margin-bottom:12px;">
+                        <p style="color:#fff;font-size:1.15em;text-align:center;">Edición Cbtis 225</p>
+                    </a>
+                    <a href="gorras/gorra2.html" class="carrusel-item" role="group" aria-label="Chrome Hearts CH Los Angeles" style="flex:1;transition:transform 0.6s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;align-items:center;justify-content:center;text-decoration:none;position:absolute;left:0;top:0;width:100%;opacity:0;">
+                        <img src="E:/pagina gorras/Chrome-Hearts-CH-Los-Angeles-Trucker-Hat-Black-Black.avif" alt="Gorra edición limitada 2" style="max-width:320px;border-radius:18px;box-shadow:0 4px 24px #0004;margin-bottom:12px;">
+                        <p style="color:#fff;font-size:1.15em;text-align:center;">Chrome Hearts CH Los Angeles</p>
+                    </a>
+                    <a href="gorras/gorra3.html" class="carrusel-item" role="group" aria-label="Polo" style="flex:1;transition:transform 0.6s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;align-items:center;justify-content:center;text-decoration:none;position:absolute;left:0;top:0;width:100%;opacity:0;">
+                        <img src="E:\pagina gorras\710548524012-700x875.webp" alt="Gorra edición limitada 3" style="max-width:320px;border-radius:18px;box-shadow:0 4px 24px #0004;margin-bottom:12px;">
+                        <p style="color:#fff;font-size:1.15em;text-align:center;">Polo</p>
+                    </a>
+                </div>
+                <button class="carrusel-btn next" aria-label="Siguiente" tabindex="0" style="background:#fff;border:none;border-radius:50%;width:44px;height:44px;font-size:2em;color:#c62828;box-shadow:0 2px 8px #0002;cursor:pointer;">&#10095;</button>
+            </div>
+            <div class="carrusel-indicadores" style="display:flex;justify-content:center;gap:10px;margin-top:18px;">
+                <button class="carrusel-indicador active" aria-label="Ver primer elemento" tabindex="0" style="width:14px;height:14px;border-radius:50%;border:none;background:#c62828;box-shadow:0 2px 8px #0002;cursor:pointer;"></button>
+                <button class="carrusel-indicador" aria-label="Ver segundo elemento" tabindex="0" style="width:14px;height:14px;border-radius:50%;border:none;background:#fff;box-shadow:0 2px 8px #0002;cursor:pointer;"></button>
+                <button class="carrusel-indicador" aria-label="Ver tercer elemento" tabindex="0" style="width:14px;height:14px;border-radius:50%;border:none;background:#fff;box-shadow:0 2px 8px #0002;cursor:pointer;"></button>
+            </div>
+        </section>
+        <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Carrusel mejorado
+            const items = document.querySelectorAll('.carrusel-item');
+            const prevBtn = document.querySelector('.carrusel-btn.prev');
+            const nextBtn = document.querySelector('.carrusel-btn.next');
+            const indicadores = document.querySelectorAll('.carrusel-indicador');
+            const carrusel = document.querySelector('.carrusel-items');
+            let current = 0;
+            let intervalId = null;
+            function showItem(idx) {
+                if (!items || items.length === 0) return;
+                items.forEach((el, i) => {
+                    el.classList.toggle('active', i === idx);
+                    el.style.opacity = i === idx ? '1' : '0';
+                    el.style.zIndex = i === idx ? '2' : '1';
+                });
+                indicadores.forEach((btn, i) => btn.classList.toggle('active', i === idx));
+                current = idx;
+            }
+            function next() { showItem((current + 1) % items.length); }
+            function prev() { showItem((current - 1 + items.length) % items.length); }
+            if (prevBtn) prevBtn.addEventListener('click', prev);
+            if (nextBtn) nextBtn.addEventListener('click', next);
+            indicadores.forEach((btn, i) => btn.addEventListener('click', () => showItem(i)));
+            // Navegación por teclado
+            document.querySelector('.carrusel').addEventListener('keydown', function(e) {
+                if (e.key === 'ArrowLeft') { prevBtn.click(); }
+                if (e.key === 'ArrowRight') { nextBtn.click(); }
+            });
+            // Pausa automática al pasar el mouse
+            function startAuto() { intervalId = setInterval(next, 5000); }
+            function stopAuto() { if (intervalId) clearInterval(intervalId); }
+            carrusel.addEventListener('mouseenter', stopAuto);
+            carrusel.addEventListener('mouseleave', startAuto);
+            startAuto();
+            showItem(current);
+
+            // Mostrar cantidad de carrito
+            function actualizarCarritoHeader() {
+                try {
+                    let carrito = JSON.parse(localStorage.getItem('carritoCapZone') || '[]');
+                    const total = carrito.reduce((a, b) => a + (b.cantidad || 0), 0);
+                    const el = document.getElementById('cart-count');
+                    if (el) el.textContent = total;
+                } catch (err) {
+                    console.error('Error al leer carrito de localStorage:', err);
+                }
+            }
+            actualizarCarritoHeader();
+            window.addEventListener('storage', actualizarCarritoHeader);
+
+            // Delegación de eventos para botones .btn-comprar
+            document.addEventListener('click', function(e) {
+                const btn = e.target.closest && e.target.closest('.btn-comprar');
+                if (!btn) return;
+                e.preventDefault();
+                // Obtener datos del producto desde la tarjeta o desde data-attributes del botón
+                const card = btn.closest('.gorra-card') || btn.closest('article') || btn.closest('.producto') || document;
+                const nombreEl = card.querySelector('h4, h3, h2') || null;
+                const nombre = (nombreEl && nombreEl.textContent.trim()) || (btn.dataset && btn.dataset.nombre) || 'Producto';
+                const precioEl = card.querySelector('.precio');
+                const precio = precioEl ? parseFloat(precioEl.textContent.replace(/[^\d.]/g, '')) : parseFloat((btn.dataset && btn.dataset.precio) || '0') || 0;
+                const imgEl = card.querySelector('img');
+                const img = imgEl ? imgEl.src : (btn.dataset && btn.dataset.img) || '';
+
+                console.log('Agregar al carrito:', { nombre, precio, img });
+
+                let carrito = [];
+                try { carrito = JSON.parse(localStorage.getItem('carritoCapZone') || '[]'); } catch(e) { carrito = []; }
+                const idx = carrito.findIndex(item => item.nombre === nombre);
+                if (idx > -1) { carrito[idx].cantidad = (carrito[idx].cantidad || 0) + 1; }
+                else { carrito.push({ nombre, precio, img, cantidad: 1 }); }
+                localStorage.setItem('carritoCapZone', JSON.stringify(carrito));
+                actualizarCarritoHeader();
+
+                // Indicar retroalimentación visual rápida
+                btn.classList.add('added-to-cart');
+                setTimeout(() => btn.classList.remove('added-to-cart'), 600);
+            });
+
+            // Cargar logo guardado (si existe)
+            const siteLogoImg = document.getElementById('site-logo-img');
+            if (siteLogoImg) {
+                const data = localStorage.getItem('siteLogo');
+                if (data) {
+                    siteLogoImg.src = data;
+                    siteLogoImg.style.display = '';
+                }
+            }
+        });
+        </script>
+
+        <!-- Sección: Ejemplo de uso de iframe -->
+        <section class="iframe-section" aria-labelledby="iframe-title" style="margin-bottom:24px;">
+            <h3 id="iframe-title" class="accent" style="text-align:center;margin-bottom:12px;">Pagina de ig</h3>
+            <div class="iframe-wrapper" style="max-width:700px;margin:0 auto;border-radius:12px;overflow:hidden;box-shadow:0 8px 32px #0002;">
+                <!-- Cambia la URL por la que quieras mostrar -->
+                <iframe 
+                    src="https://www.instagram.com/capzone_mxx/embed" 
+                    width="400" 
+                    height="480" 
+                    frameborder="0" 
+                    scrolling="no" 
+                    allowtransparency="true">
+                </iframe>                
+            </div>
+            <p style="text-align:center;font-size:0.9em;color:var(--text-light,#bdbdbd);margin-top:8px;">Contenido mostrado mediante <code>&lt;iframe&gt;</code>. Puedes cambiar la URL por la que desees mostrar.</p>
+        </section>
+
+        <!-- Sección: Etiqueta personalizada <filter> -->
+        <section class="filter-section" aria-labelledby="filter-title" style="margin-bottom:24px;">
+    </main>
+
+    <!--
+        FOOTER: Pie de página del sitio.
+        Contiene información de derechos de autor, enlaces a redes sociales y contacto.
+    -->
+    <footer>
+        <div class="container footer-content">
+            <p>&copy; 2025 CapZone. Todos los derechos reservados.</p>
+            <nav aria-label="Redes sociales">
+                <ul class="social-list">
+                    <li><a href="#" aria-label="Facebook CapZone">Facebook</a></li>
+                    <li><a href="#" aria-label="Instagram CapZone">Instagram</a></li>
+                    <li><a href="#" aria-label="Twitter CapZone">Twitter</a></li>
+                </ul>
+            </nav>
+            <p class="small">Dirección de atención al cliente disponible en <a href="contacto.html">Contacto</a>.</p>
+        </div>
+    </footer>
+
+    <style>
+    .minimal-main {
+        background: var(--bg-card,#232323);
+        border-radius: var(--radius,14px);
+        box-shadow: none;
+        padding: 32px 10px;
+        max-width: 700px;
+        margin: 40px auto 0 auto;
+    }
+    .minimal-hero {
+        background: none;
+        color: var(--text,#f5f5f5);
+        padding: 0 0 24px 0;
+        border-radius: 0;
+        box-shadow: none;
+        text-align: center;
+    }
+    .minimal-title { color: var(--accent,#c62828); font-size: 2.1rem; font-weight: 700; margin-bottom: 10px; }
+    .minimal-desc { color: var(--text-light,#bdbdbd); margin-bottom: 18px; }
+    .accent { color: var(--accent,#c62828); background: none; }
+    .minimal-btn { background: var(--accent,#c62828); color: #fff; border-radius: var(--radius,10px); box-shadow: none; border: none; font-weight: 600; padding: 12px 32px; font-size: 1.1em; transition: background 0.2s, transform 0.2s; }
+    .minimal-btn:active { background: var(--accent-dark,#8b0000); transform: scale(0.97); }
+    .minimal-carrusel { background: none; box-shadow: none; border-radius: 0; }
+
+    /* Estilos para el área de iframe */
+    .iframe-wrapper { max-width:700px;margin:0 auto;border-radius:12px;overflow:hidden;box-shadow:0 8px 32px #0002; }
+    .iframe-wrapper iframe { width:100%; height:420px; border:0; display:block; }
+    @media (max-width:600px) { .iframe-wrapper iframe { height:58vw; } }
+    </style>
+
+</body>
+</html>

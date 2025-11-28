@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CapZone | Contacto</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+    .minimal-main {
+        background: var(--bg-card,#232323);
+        border-radius: var(--radius,14px);
+        box-shadow: none;
+        padding: 32px 10px;
+        max-width: 520px;
+        margin: 40px auto 0 auto;
+    }
+    .minimal-title { color: var(--accent,#c62828); font-size: 2.1rem; font-weight: 700; margin-bottom: 10px; text-align: center; }
+    .minimal-desc { color: var(--text-light,#bdbdbd); margin-bottom: 18px; text-align: center; }
+    .minimal-btn { background: var(--accent,#c62828); color: #fff; border-radius: var(--radius,10px); box-shadow: none; border: none; font-weight: 600; padding: 12px 32px; font-size: 1.1em; transition: background 0.2s, transform 0.2s; width: 100%; }
+    .minimal-btn:active { background: var(--accent-dark,#8b0000); transform: scale(0.97); }
+    .minimal-form { background: none; box-shadow: none; border-radius: 0; padding: 0; }
+    .minimal-input { padding: 7px 10px; border-radius: 6px; border: 1px solid var(--accent,#c62828); background: var(--bg-card,#232323); color: var(--text,#f5f5f5); font-weight: 500; width: 100%; }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content" style="display:flex;align-items:center;justify-content:space-between;gap:24px;">
+            <div style="display:flex;align-items:center;gap:14px;width:320px;min-width:280px;max-width:700px;">
+                <img id="site-logo-img" src="img/IMG_1261.jpeg" alt="Logo CapZone" style="width:100%;height:auto;display:block;border-radius:10px;box-shadow:0 2px 8px #0001;margin-left:0;">
+            </div>
+            <nav aria-label="Menú principal">
+                <ul class="nav-list">
+                    <li><a href="index.html">Inicio</a></li>
+                    <li><a href="productos.html">Productos</a></li>
+                    <li><a href="carrito.html">Carrito <span id="cart-count" style="background:var(--accent);color:#fff;padding:2px 8px;border-radius:12px;font-size:0.9em;margin-left:2px;">0</span></a></li>
+                    <li><a href="contacto.html" class="active" aria-current="page">Contacto</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container minimal-main">
+        <h2 class="minimal-title">Contacto</h2>
+        <p class="minimal-desc">¿Tienes preguntas sobre un pedido, devoluciones o simplemente quieres saludar? Rellena el formulario y te responderemos a la brevedad.</p>
+        <section class="formulario-contacto minimal-form">
+            <form action="#" method="POST">
+                <div class="form-group">
+                    <label for="nombre">Nombre Completo:</label>
+                    <input type="text" id="nombre" name="nombre" class="minimal-input" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Correo Electrónico:</label>
+                    <input type="email" id="email" name="email" class="minimal-input" required>
+                </div>
+                <div class="form-group">
+                    <label for="asunto">Asunto:</label>
+                    <select id="asunto" name="asunto" class="minimal-input">
+                        <option value="general">Consulta General</option>
+                        <option value="pedido">Estado de Pedido</option>
+                        <option value="devolucion">Devolución / Cambio</option>
+                        <option value="colaboracion">Colaboración</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="mensaje">Tu Mensaje:</label>
+                    <textarea id="mensaje" name="mensaje" rows="6" class="minimal-input" required></textarea>
+                </div>
+                <button type="submit" class="btn-primary minimal-btn">Enviar Mensaje</button>
+            </form>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 CapZone. ¡Esperamos tu mensaje!</p>
+    </footer>
+
+    <script>
+    // Mostrar cantidad de carrito en header
+    function actualizarCarritoHeader() {
+        let carrito = JSON.parse(localStorage.getItem('carritoCapZone') || '[]');
+        document.getElementById('cart-count').textContent = carrito.reduce((a, b) => a + b.cantidad, 0);
+    }
+    actualizarCarritoHeader();
+    window.addEventListener('storage', actualizarCarritoHeader);
+
+    // Manejo del logo: vista previa, guardar en localStorage y mostrar en el header
+    const logoInput = document.getElementById('logo-input');
+    const logoPreview = document.getElementById('logo-preview');
+    const saveLogoBtn = document.getElementById('save-logo');
+    const removeLogoBtn = document.getElementById('remove-logo');
+    const siteLogoImg = document.getElementById('site-logo-img');
+
+    function loadLogo() {
+        const data = localStorage.getItem('siteLogo');
+        if (data) {
+            siteLogoImg.src = data;
+            siteLogoImg.style.display = '';
+            logoPreview.src = data;
+            logoPreview.style.display = '';
+        } else {
+            siteLogoImg.style.display = 'none';
+            logoPreview.style.display = 'none';
+        }
+    }
+
+    if (logoInput) {
+        logoInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = () => {
+                logoPreview.src = reader.result;
+                logoPreview.style.display = '';
+            };
+            reader.readAsDataURL(file);
+        });
+    }
+
+    if (saveLogoBtn) {
+        saveLogoBtn.addEventListener('click', () => {
+            if (!logoPreview.src) { alert('Selecciona una imagen primero.'); return; }
+            try {
+                localStorage.setItem('siteLogo', logoPreview.src);
+                loadLogo();
+                alert('Logo guardado.');
+            } catch (e) {
+                alert('No se pudo guardar el logo: ' + e.message);
+            }
+        });
+    }
+
+    if (removeLogoBtn) {
+        removeLogoBtn.addEventListener('click', () => {
+            localStorage.removeItem('siteLogo');
+            logoPreview.src = '';
+            logoPreview.style.display = 'none';
+            loadLogo();
+            alert('Logo eliminado.');
+        });
+    }
+
+    // Cargar logo al inicializar la página
+    document.addEventListener('DOMContentLoaded', loadLogo);
+    </script>
+
+</body>
+</html>

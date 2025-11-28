@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gorra 5 | CapZone</title>
+    <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+    <header>
+        <div class="header-content" style="display:flex;align-items:center;justify-content:space-between;gap:24px;">
+            <div style="display:flex;align-items:center;gap:14px;width:320px;min-width:280px;max-width:700px;">
+                <img id="site-logo-img" src="E:\pagina gorras\IMG_1261.jpeg" alt="Logo CapZone" style="width:100%;height:auto;display:block;border-radius:10px;box-shadow:0 2px 8px #0001;margin-left:0;">
+            </div>
+            <nav aria-label="Menú principal">
+                <ul class="nav-list">
+                     <li><a href="../index.html">Inicio</a></li>
+                    <li><a href="../productos.html">Productos</a></li>
+                    <li><a href="../carrito.html">Carrito <span id="cart-count" style="background:var(--accent);color:#0a0909;padding:2px 8px;border-radius:12px;font-size:0.9em;margin-left:2px;">0</span></a></li>
+                    <li><a href="../contacto.html">Contacto</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <main class="container" style="max-width:700px;margin:auto;padding:32px 18px;background:#272424;border-radius:18px;box-shadow:0 4px 32px #e5393522;">
+        <h2 style="color:var(--accent,#e53935);font-size:2rem;margin-bottom:18px;text-align:center;letter-spacing:1px;">Gorra New Era x Stillz x Mora Hat</h2>
+        <div style="display:flex;flex-wrap:wrap;gap:32px;align-items:center;justify-content:center;">
+            <img src="E:\pagina gorras\fdbd526de2dbc1f312f70065c9cf3f48.webp" alt="Gorra 5" style="max-width:300px;border-radius:16px;box-shadow:0 2px 12px #0002;">
+            <div style="flex:1;min-width:220px;">
+                <ul style="list-style:none;padding:0;font-size:1.1em;line-height:1.7;">
+                    <li><strong>Tipo:</strong> Beanie</li>
+                    <li><strong>Precio:</strong> <span style="color:var(--accent,#e53935);font-weight:bold;">$60.99 USD</span></li>
+                    <li><strong>Colores:</strong> Negro, Burdeos</li>
+                </ul>
+                <a href="#" class="btn-comprar" data-nombre="Gorra 5" data-precio="18.99" data-img="E:\pagina gorras\fdbd526de2dbc1f312f70065c9cf3f48.webp" style="margin-top:18px;display:inline-block;padding:12px 32px;font-size:1.1em;border-radius:10px;background:var(--accent,#e53935);color:#fff;font-weight:bold;box-shadow:0 2px 8px #e5393522;transition:background 0.2s,transform 0.2s;">Agregar al Carrito</a>
+            </div>
+        </div>
+    </main>
+    <footer>
+        <p>&copy; 2025 CapZone. Todos los derechos reservados.</p>
+    </footer>
+    <script>
+    function actualizarCarritoHeader() {
+        let carrito = JSON.parse(localStorage.getItem('carritoCapZone') || '[]');
+        const el = document.getElementById('cart-count');
+        if (el) el.textContent = carrito.reduce((a, b) => a + (b.cantidad || 0), 0);
+    }
+    actualizarCarritoHeader();
+    window.addEventListener('storage', actualizarCarritoHeader);
+
+    document.querySelectorAll('.btn-comprar').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            let carrito = JSON.parse(localStorage.getItem('carritoCapZone') || '[]');
+            const nombre = btn.dataset.nombre || (document.querySelector('h2, h1, h3')?.textContent.trim()) || 'Producto';
+            const precio = parseFloat(btn.dataset.precio) || parseFloat((document.querySelector('.accent')?.textContent || '').replace(/[^\d.]/g, '')) || 0;
+            let img = btn.dataset.img || (document.querySelector('img')?.src) || '';
+            if(img.startsWith('../')) img = img.replace('../', 'img/');
+            if(img.startsWith('E:/pagina gorras/')) img = 'img/' + img.split('/').pop();
+            const detalles = btn.dataset.detalles || '';
+            const idx = carrito.findIndex(item => item.nombre === nombre);
+            if(idx > -1) { carrito[idx].cantidad = (carrito[idx].cantidad || 0) + 1; }
+            else { carrito.push({nombre, precio, img, detalles, cantidad:1}); }
+            localStorage.setItem('carritoCapZone', JSON.stringify(carrito));
+            actualizarCarritoHeader();
+            alert('¡Producto añadido al carrito!');
+        });
+    });
+    </script>
+</body>
+</html>

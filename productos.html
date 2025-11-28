@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <!--
+        HEAD: Metadatos, título, descripción y enlace a la hoja de estilos principal.
+        Define la información básica y la apariencia global de la página de productos.
+    -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CapZone | Catálogo de Gorras</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <div class="header-content" style="display:flex;align-items:center;justify-content:space-between;gap:24px;">
+            <div style="display:flex;align-items:center;gap:14px;width:320px;min-width:280px;max-width:700px;">
+                <img id="site-logo-img" src="img/IMG_1261.jpeg" alt="Logo CapZone" style="width:100%;height:auto;display:block;border-radius:10px;box-shadow:0 2px 8px #0001;margin-left:0;">
+            </div>
+            <nav aria-label="Menú principal">
+                <ul class="nav-list">
+                    <li><a href="index.html">Inicio</a></li>
+                    <li><a href="productos.html" class="active" aria-current="page">Productos</a></li>
+                    <li><a href="carrito.html">Carrito <span id="cart-count" style="background:var(--accent);color:#fff;padding:2px 8px;border-radius:12px;font-size:0.9em;margin-left:2px;">0</span></a></li>
+                    <li><a href="contacto.html">Contacto</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container minimal-main">
+        <button id="expandir-filtros" class="minimal-btn" style="margin-bottom:18px;width:auto;padding:8px 22px;font-size:1em;display:block;margin-left:auto;margin-right:auto;">🔍  Expandir filtros</button>
+        <!--
+            HERO: Sección de bienvenida al catálogo.
+            Presenta el título y una breve descripción del catálogo de gorras.
+        -->
+        <section class="hero minimal-hero">
+            <div>
+                <h2 class="minimal-title">Catálogo Oficial de Gorras</h2>
+                <p class="minimal-desc">Explora modelos, colores y exclusivas ediciones. Filtra por tipo, precio y disponibilidad.</p>
+                <a href="#lista-gorras" class="btn-primary minimal-btn">Ver Catálogo</a>
+            </div>
+        </section>
+
+        <!--
+            BARRA DE HERRAMIENTAS: Filtros y ordenamiento.
+            Permite filtrar los productos por tipo y ordenarlos según diferentes criterios.
+        -->
+        <section class="toolbar filtros minimal-toolbar" id="filtros-section" style="display:none;">
+            <div>
+                <label for="tipo" class="accent">Tipo</label>
+                <select id="tipo" class="minimal-input">
+                    <option value="todos">Todos</option>
+                    <option value="snapback">Snapback</option>
+                    <option value="trucker">Trucker</option>
+                    <option value="fitted">Fitted</option>
+                    <option value="beanie">Beanie</option>
+                </select>
+            </div>
+            <div>
+                <label for="orden" class="accent">Ordenar</label>
+                <select id="orden" class="minimal-input">
+                    <option value="relevancia">Relevancia</option>
+                    <option value="precio-asc">Precio: Menor a mayor</option>
+                    <option value="precio-desc">Precio: Mayor a menor</option>
+                </select>
+            </div>
+        </section>
+        <div id="toast" style="position:fixed;bottom:32px;right:32px;z-index:9999;background:var(--accent,#e53935);color:#fff;padding:16px 28px;border-radius:16px;box-shadow:0 4px 16px #0003;font-size:1.1em;display:none;align-items:center;gap:10px;">
+            <span id="toast-msg"></span>
+        </div>
+        <!--
+            SCRIPT: Lógica de filtros, ordenamiento y carrito.
+            Permite filtrar y ordenar productos, y gestionar el carrito de compras.
+        -->
+        <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Toast notification
+            function showToast(msg) {
+                const toast = document.getElementById('toast');
+                if (!toast) return;
+                document.getElementById('toast-msg').textContent = msg;
+                toast.style.display = 'flex';
+                toast.style.opacity = '1';
+                setTimeout(() => {
+                    toast.style.opacity = '0';
+                    setTimeout(() => { toast.style.display = 'none'; }, 400);
+                }, 1800);
+            }
+
+            // Filtros funcionales (más robusto: maneja ausencia de botones "aplicar/limpiar")
+            (function() {
+                const tipoSelect = document.getElementById('tipo');
+                const ordenSelect = document.getElementById('orden');
+                const contenedor = document.getElementById('lista-gorras');
+                if (!tipoSelect || !ordenSelect || !contenedor) return;
+
+                function filtrarYOrdenar() {
+                    const tipo = tipoSelect.value;
+                    const orden = ordenSelect.value;
+                    let productos = Array.from(contenedor.querySelectorAll('.gorra-card'));
+                    // Filtrar
+                    productos.forEach(card => {
+                        const tipoCard = card.getAttribute('data-tipo');
+                        card.style.display = (tipo === 'todos' || tipoCard === tipo) ? '' : 'none';
+                    });
+                    // Ordenar solo los visibles
+                    let visibles = productos.filter(card => card.style.display !== 'none');
+                    visibles.sort((a, b) => {
+                        const paEl = a.querySelector('.precio');
+                        const pbEl = b.querySelector('.precio');
+                        const paTxt = paEl ? paEl.textContent.replace(/[^0-9,\.]/g, '').replace(',', '.') : '0';
+                        const pbTxt = pbEl ? pbEl.textContent.replace(/[^0-9,\.]/g, '').replace(',', '.') : '0';
+                        const pa = parseFloat(paTxt) || 0;
+                        const pb = parseFloat(pbTxt) || 0;
+                        if (orden === 'precio-asc') return pa - pb;
+                        if (orden === 'precio-desc') return pb - pa;
+                        if (orden === 'novedades') return (parseInt(b.dataset.novedad || 0, 10)) - (parseInt(a.dataset.novedad || 0, 10));
+                        return 0;
+                    });
+                    visibles.forEach(card => contenedor.appendChild(card));
+                }
+
+                const aplicarBtn = document.getElementById('aplicar');
+                const limpiarBtn = document.getElementById('limpiar');
+                if (aplicarBtn) aplicarBtn.addEventListener('click', filtrarYOrdenar);
+                if (limpiarBtn) limpiarBtn.addEventListener('click', () => { tipoSelect.value = 'todos'; ordenSelect.value = 'relevancia'; filtrarYOrdenar(); });
+                // Also apply on change so users get instant feedback even without buttons
+                tipoSelect.addEventListener('change', filtrarYOrdenar);
+                ordenSelect.addEventListener('change', filtrarYOrdenar);
+
+                // Inicializar orden
+                filtrarYOrdenar();
+            })();
+
+            // Carrito funcional con delegación (resistente a errores y a elementos faltantes)
+            function actualizarCarritoHeader() {
+                try {
+                    let carrito = JSON.parse(localStorage.getItem('carritoCapZone') || '[]');
+                    const el = document.getElementById('cart-count');
+                    if (el) el.textContent = carrito.reduce((a, b) => a + (b.cantidad || 0), 0);
+                } catch (err) {
+                    console.error('Error actualizando contador de carrito:', err);
+                }
+            }
+            actualizarCarritoHeader();
+            window.addEventListener('storage', actualizarCarritoHeader);
+
+            document.addEventListener('click', function(e) {
+                const btn = e.target && e.target.closest ? e.target.closest('.btn-comprar') : null;
+                if (!btn) return;
+                e.preventDefault();
+                const card = btn.closest('.gorra-card');
+                if (!card) return;
+
+                // Obtener nombre
+                let nombre = 'Producto';
+                const h3a = card.querySelector('h3 a');
+                if (h3a) nombre = h3a.textContent.trim();
+                else {
+                    const h3 = card.querySelector('h3');
+                    if (h3) nombre = h3.textContent.trim();
+                }
+
+                // Obtener precio (maneja USD y separador decimal coma)
+                const precioEl = card.querySelector('.precio');
+                let precio = 0;
+                if (precioEl) {
+                    const precioTxt = precioEl.textContent.replace(/USD/i, '').replace(/[^\d,\.]/g, '').replace(',', '.');
+                    precio = parseFloat(precioTxt) || 0;
+                }
+
+                const imgEl = card.querySelector('img');
+                const img = imgEl ? imgEl.src : '';
+                const detallesEl = card.querySelector('.detalles');
+                const detalles = detallesEl ? detallesEl.textContent.trim() : '';
+
+                let carrito = [];
+                try { carrito = JSON.parse(localStorage.getItem('carritoCapZone') || '[]'); } catch(e) { carrito = []; }
+                const idx = carrito.findIndex(item => item.nombre === nombre);
+                if (idx > -1) { carrito[idx].cantidad = (carrito[idx].cantidad || 0) + 1; }
+                else { carrito.push({ nombre, precio, img, detalles, cantidad: 1 }); }
+                try { localStorage.setItem('carritoCapZone', JSON.stringify(carrito)); } catch(e) { console.error('Error guardando carrito:', e); }
+                actualizarCarritoHeader();
+                showToast('¡Producto añadido al carrito!');
+
+                // Retroalimentación visual rápida
+                btn.classList.add('added-to-cart');
+                setTimeout(() => btn.classList.remove('added-to-cart'), 600);
+                btn.style.transform = 'scale(0.95)';
+                setTimeout(() => { btn.style.transform = ''; }, 300);
+
+                console.log('Agregado al carrito:', { nombre, precio, img, detalles });
+            });
+
+            // Botón para expandir/cerrar filtros
+            const btnExpandir = document.getElementById('expandir-filtros');
+            const filtrosSection = document.getElementById('filtros-section');
+            if (btnExpandir && filtrosSection) {
+                btnExpandir.addEventListener('click', function() {
+                    if (filtrosSection.style.display === 'none' || filtrosSection.style.display === '') {
+                        filtrosSection.style.display = 'flex';
+                        btnExpandir.textContent = '✖️  Ocultar filtros';
+                    } else {
+                        filtrosSection.style.display = 'none';
+                        btnExpandir.textContent = '🔍  Expandir filtros';
+                    }
+                });
+            }
+
+            // Cargar logo guardado (si existe)
+            const siteLogoImg = document.getElementById('site-logo-img');
+            function loadLogo() {
+                try {
+                    const data = localStorage.getItem('siteLogo');
+                    if (data && siteLogoImg) {
+                        siteLogoImg.src = data;
+                        siteLogoImg.style.display = '';
+                    } else if (siteLogoImg) {
+                        siteLogoImg.style.display = 'none';
+                    }
+                } catch (e) {
+                    console.error('Error cargando logo:', e);
+                }
+            }
+            loadLogo();
+        });
+        </script>
+        <style>
+        .minimal-main {
+            background: var(--bg-card,#232323);
+            border-radius: var(--radius,14px);
+            box-shadow: none;
+            padding: 32px 10px;
+            max-width: 900px;
+            margin: 40px auto 0 auto;
+        }
+        .minimal-hero {
+            background: none;
+            color: var(--text,#f5f5f5);
+            padding: 0 0 24px 0;
+            border-radius: 0;
+            box-shadow: none;
+            text-align: center;
+        }
+        .minimal-title { color: var(--accent,#c62828); font-size: 2.1rem; font-weight: 700; margin-bottom: 10px; }
+        .minimal-desc { color: var(--text-light,#bdbdbd); margin-bottom: 18px; }
+        .accent { color: var(--accent,#c62828); background: none; }
+        .minimal-btn { background: var(--accent,#c62828); color: #fff; border-radius: var(--radius,10px); box-shadow: none; border: none; font-weight: 600; padding: 12px 32px; font-size: 1.1em; transition: background 0.2s, transform 0.2s; }
+        .minimal-btn:active { background: var(--accent-dark,#8b0000); transform: scale(0.97); }
+        .minimal-toolbar { background: none; color: var(--text,#f5f5f5); border-radius: 0; box-shadow: none; padding: 10px 0; gap: 18px; }
+        .minimal-input { padding: 7px 10px; border-radius: 6px; border: 1px solid var(--accent,#c62828); background: var(--bg-card,#232323); color: var(--text,#f5f5f5); font-weight: 500; }
+        </style>
+        <hr>
+        <!--
+            CATÁLOGO DE GORRAS: Lista de productos en formato de tarjetas.
+            Cada tarjeta muestra la información principal de una gorra y permite agregarla al carrito.
+        -->
+        <div class="productos grid-3" id="lista-gorras" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 32px; margin-top: 32px;">
+            <!-- Tarjeta de producto mejorada: badge, precio y acción rápida -->
+            <div class="gorra-card" data-tipo="snapback" data-novedad="3" style="position:relative;overflow:hidden;">
+                <div class="badge" style="top:18px;left:18px;font-size:1.05em;padding:7px 18px;box-shadow:0 4px 16px #3b82f655;letter-spacing:1px;">especial</div>
+                <img src="E:\pagina gorras\Gemini_Generated_Image_cswf46cswf46cswf.png" alt="Gorra Snapback" usemap="#map-gorra1" style="width:80%;max-width:240px;display:block;margin:0 auto 18px auto;box-shadow:0 4px 24px #3b82f61a;">
+                <map name="map-gorra1">
+                    <area shape="rect" coords="0,0,300,300" href="gorras/gorra1.html" alt="GORRA CBtis 225">
+                </map>
+                <h3 style="font-size:1.35em;margin-bottom:8px;"><a href="gorras/gorra1.html" style="color:var(--accent-dark);text-decoration:none;">GORRA CBtis 225</a></h3>
+                <p class="detalles" style="margin-bottom:10px;">Ajuste regulable. Colores disponibles: vino, azul jaguar y blanco.</p>
+                <div style="display:flex;align-items:center;justify-content:space-between;">
+                    <span class="precio" style="font-size:1.25em;">$67.99 <span style="font-size:0.9em;color:var(--text-light);">USD</span></span>
+                    <a href="#" class="btn-comprar" style="padding:10px 28px;font-size:1.08em;">Agregar al Carrito</a>
+                </div>
+            </div>
+            <div class="gorra-card" data-tipo="trucker" data-novedad="2" style="position:relative;overflow:hidden;">
+                <img src="E:\pagina gorras\Chrome-Hearts-CH-Los-Angeles-Trucker-Hat-Black-Black.avif" alt="Gorra Trucker" usemap="#map-gorra2" style="width:100%;max-width:260px;display:block;margin:0 auto 18px auto;box-shadow:0 4px 24px #3b82f61a;">
+                <map name="map-gorra2">
+                    <area shape="rect" coords="0,0,300,300" href="gorras/gorra2.html" alt="GORRA 2">
+                </map>
+                <h3 style="font-size:1.35em;margin-bottom:8px;"><a href="gorras/gorra2.html" style="color:var(--accent-dark);text-decoration:none;">Chrome Hearts CH Los Angeles </a></h3>
+                <p class="detalles" style="margin-bottom:10px;">Colores disponibles: Negro</p>
+                <div style="display:flex;align-items:center;justify-content:space-between;">
+                    <span class="precio" style="font-size:1.25em;">$963</span>
+                    <a href="#" class="btn-comprar" style="padding:10px 28px;font-size:1.08em;">Agregar al Carrito</a>
+                </div>
+            </div>
+            <div class="gorra-card" data-tipo="fitted" data-novedad="1" style="position:relative;overflow:hidden;">
+                <img src="E:\pagina gorras\710548524012-700x875.webp" alt="Gorra Fitted" usemap="#map-gorra3" style="width:80%;max-width:210px;display:block;margin:0 auto 18px auto;box-shadow:0 4px 24px #3b82f61a;">
+                <map name="map-gorra3">
+                    <area shape="rect" coords="0,0,300,300" href="gorras/gorra3.html" alt="GORRA 3">
+                </map>
+                <h3 style="font-size:1.35em;margin-bottom:8px;"><a href="gorras/gorra3.html" style="color:var(--accent-dark);text-decoration:none;">Gorra Polo</a></h3>
+                <p class="detalles" style="margin-bottom:10px;">Ajuste cerrado, logo bordado. Tallas: S, M, L.</p>
+                <div style="display:flex;align-items:center;justify-content:space-between;">
+                    <span class="precio" style="font-size:1.25em;">$51.00</span>
+                    <a href="#" class="btn-comprar" style="padding:10px 28px;font-size:1.08em;">Agregar al Carrito</a>
+                </div>
+            </div>
+            <div class="gorra-card" data-tipo="snapback" data-novedad="0" style="position:relative;overflow:hidden;">
+                <img src="E:\pagina gorras\a942fc97-e181-46de-af22-cf9da20754b3.webp" alt="Gorra Snapback Camuflaje" usemap="#map-gorra4" style="width:100%;max-width:260px;display:block;margin:0 auto 18px auto;box-shadow:0 4px 24px #3b82f61a;">
+                <map name="map-gorra4">
+                    <area shape="rect" coords="0,0,300,300" href="gorras/gorra4.html" alt="GORRA 4">
+                </map>
+                <h3 style="font-size:1.35em;margin-bottom:8px;"><a href="gorras/gorra4.html" style="color:var(--accent-dark);text-decoration:none;">GORRA Barbas Hats x CT "GALAXY CT" GOLD 24K PLATED</a></h3>
+
+                <div style="display:flex;align-items:center;justify-content:space-between;">
+                    <span class="precio" style="font-size:1.25em;">$32.99</span>
+                    <a href="#" class="btn-comprar" style="padding:10px 28px;font-size:1.08em;">Agregar al Carrito</a>
+                </div>
+            </div>
+            <!-- Nuevos modelos -->
+            <div class="gorra-card" data-tipo="beanie" data-novedad="4" style="position:relative;overflow:hidden;">
+                <div class="badge" style="top:18px;left:18px;font-size:1.05em;padding:7px 18px;box-shadow:0 4px 16px #3b82f655;letter-spacing:1px;background:linear-gradient(90deg,var(--accent),var(--accent-dark));">Edición Especial</div>
+                <img src="E:\pagina gorras\fdbd526de2dbc1f312f70065c9cf3f48.webp" alt="Gorra Beanie Invierno" usemap="#map-gorra5" style="width:100%;max-width:260px;display:block;margin:0 auto 18px auto;box-shadow:0 4px 24px #3b82f61a;">
+                <map name="map-gorra5">
+                    <area shape="rect" coords="0,0,300,300" href="gorras/gorra5.html" alt="GORRA 5">
+                </map>
+                <h3 style="font-size:1.35em;margin-bottom:8px;"><a href="gorras/gorra5.html" style="color:var(--accent-dark);text-decoration:none;">GORRA New Era x Stillz x Mora Hat</a></h3>
+                <div style="display:flex;align-items:center;justify-content:space-between;">
+                    <span class="precio" style="font-size:1.25em;">$60.99</span>
+                    <a href="#" class="btn-comprar" style="padding:10px 28px;font-size:1.08em;">Agregar al Carrito</a>
+                </div>
+            </div>
+            <div class="gorra-card" data-tipo="trucker" data-novedad="5" style="position:relative;overflow:hidden;">
+                <div class="badge" style="top:18px;left:18px;font-size:1.05em;padding:7px 18px;box-shadow:0 4px 16px #3b82f655;letter-spacing:1px;background:linear-gradient(90deg,var(--accent),var(--accent-dark));">Novedad</div>
+                <img src="E:\pagina gorras\img_8717-0538e5502ffeda3cec17213995524383-1024-1024.webp" alt="Gorra Trucker Summer" usemap="#map-gorra6" style="width:100%;max-width:260px;display:block;margin:0 auto 18px auto;box-shadow:0 4px 24px #3b82f61a;">
+                <map name="map-gorra6">
+                    <area shape="rect" coords="0,0,300,300" href="gorras/gorra6.html" alt="GORRA 6">
+                </map>
+                <h3 style="font-size:1.35em;margin-bottom:8px;"><a href="gorras/gorra6.html" style="color:var(--accent-dark);text-decoration:none;">GORRA Dandy Hats x Rude Awakenings “PSALMS 83:18”</a></h3>
+                <p class="detalles" style="margin-bottom:10px;">colores: unico color </p>
+                <div style="display:flex;align-items:center;justify-content:space-between;">
+                    <span class="precio" style="font-size:1.25em;">$80.50</span>
+                    <a href="#" class="btn-comprar" style="padding:10px 28px;font-size:1.08em;">Agregar al Carrito</a>
+                </div>
+            </div>
+            <!-- Gorra 7 y Gorra 8 eliminadas del catálogo -->
+        </div>
+    </main>
+
+    <!--
+        FOOTER: Pie de página del sitio.
+        Contiene información de derechos de autor y contacto.
+    -->
+    <footer>
+        <p>&copy; 2025 CapZone. ¡Encuentra la gorra perfecta para ti!</p>
+    </footer>
+
+    <script>
+    const siteLogoImg = document.getElementById('site-logo-img');
+    function loadLogo() {
+        const data = localStorage.getItem('siteLogo');
+        if (data) {
+            siteLogoImg.src = data;
+            siteLogoImg.style.display = '';
+        } else {
+            siteLogoImg.style.display = 'none';
+        }
+    }
+    document.addEventListener('DOMContentLoaded', loadLogo);
+    </script>
+</body>
+</html>

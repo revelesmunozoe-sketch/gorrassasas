@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gorra 3 | CapZone</title>
+    <link rel="stylesheet" href="../styles.css">
+    <style>
+    .minimal-main { background: var(--bg-card,#232323); border-radius: var(--radius,14px); box-shadow: none; padding: 32px 10px; max-width: 420px; margin: 40px auto 0 auto; }
+    .minimal-title { color: var(--accent,#c62828); font-size: 1.7rem; font-weight: 700; margin-bottom: 10px; text-align: center; }
+    .minimal-img { max-width: 220px; border-radius: 12px; box-shadow: none; display: block; margin: 0 auto 18px auto; }
+    .minimal-list { list-style: none; padding: 0; font-size: 1.05em; line-height: 1.7; color: var(--text,#f5f5f5); margin-bottom: 10px; }
+    .accent { color: var(--accent,#c62828); background: none; }
+    .minimal-desc { color: var(--text-light,#bdbdbd); margin-bottom: 18px; text-align: center; }
+    .minimal-btn { background: var(--accent,#c62828); color: #fff; border-radius: var(--radius,10px); box-shadow: none; border: none; font-weight: 600; padding: 12px 32px; font-size: 1.1em; transition: background 0.2s, transform 0.2s; width: 100%; }
+    .minimal-btn:active { background: var(--accent-dark,#8b0000); transform: scale(0.97); }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content" style="display:flex;align-items:center;justify-content:space-between;gap:24px;">
+            <div style="display:flex;align-items:center;gap:14px;width:320px;min-width:280px;max-width:700px;">
+                <img id="site-logo-img" src="E:\pagina gorras\IMG_1261.jpeg" alt="Logo CapZone" style="width:100%;height:auto;display:block;border-radius:10px;box-shadow:0 2px 8px #0001;margin-left:0;">
+            </div>
+            <nav aria-label="Menú principal">
+                <ul class="nav-list">
+                     <li><a href="../index.html">Inicio</a></li>
+                    <li><a href="../productos.html">Productos</a></li>
+                    <li><a href="../carrito.html">Carrito <span id="cart-count" style="background:var(--accent);color:#fff;padding:2px 8px;border-radius:12px;font-size:0.9em;margin-left:2px;">0</span></a></li>
+                    <li><a href="../contacto.html">Contacto</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <main class="container minimal-main">
+        <h2 class="minimal-title">Gorra 3</h2>
+        <img src="E:\pagina gorras\710548524012-700x875.webp" alt="Gorra 3" class="minimal-img">
+        <ul class="minimal-list">
+            <li><strong>Tipo:</strong> Fitted</li>
+            <li><strong>Precio:</strong> <span class="accent">$39.00 USD</span></li>
+            <li><strong>Colores:</strong> S, M, L</li>
+            <li><strong>Características:</strong> Ajuste cerrado, logo bordado</li>
+        </ul>
+        <p class="minimal-desc">La Fitted Deportiva es ideal para quienes buscan un ajuste perfecto y un diseño deportivo. Disponible en varias tallas.</p>
+        <a href="#" class="btn-primary minimal-btn btn-comprar" data-nombre="Gorra 3" data-precio="39.00" data-img="E:\pagina gorras\710548524012-700x875.webp" data-detalles="Ajuste cerrado, logo bordado. Tallas: S, M, L.">Agregar al Carrito</a>
+    </main>
+    <footer>
+        <p>&copy; 2025 CapZone. Todos los derechos reservados.</p>
+    </footer>
+    <script>
+    function actualizarCarritoHeader() {
+        let carrito = JSON.parse(localStorage.getItem('carritoCapZone') || '[]');
+        const el = document.getElementById('cart-count');
+        if (el) el.textContent = carrito.reduce((a, b) => a + (b.cantidad || 0), 0);
+    }
+    actualizarCarritoHeader();
+    window.addEventListener('storage', actualizarCarritoHeader);
+
+    document.querySelectorAll('.btn-comprar').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            let carrito = JSON.parse(localStorage.getItem('carritoCapZone') || '[]');
+            const nombre = btn.dataset.nombre || (document.querySelector('h2, h1, h3')?.textContent.trim()) || 'Producto';
+            const precio = parseFloat(btn.dataset.precio) || parseFloat((document.querySelector('.accent')?.textContent || '').replace(/[^\d.]/g, '')) || 0;
+            let img = btn.dataset.img || (document.querySelector('img')?.src) || '';
+            if(img.startsWith('../')) img = img.replace('../', 'img/');
+            if(img.startsWith('E:/pagina gorras/')) img = 'img/' + img.split('/').pop();
+            const detalles = btn.dataset.detalles || '';
+            const idx = carrito.findIndex(item => item.nombre === nombre);
+            if(idx > -1) { carrito[idx].cantidad = (carrito[idx].cantidad || 0) + 1; }
+            else { carrito.push({nombre, precio, img, detalles, cantidad:1}); }
+            localStorage.setItem('carritoCapZone', JSON.stringify(carrito));
+            actualizarCarritoHeader();
+            alert('¡Producto añadido al carrito!');
+        });
+    });
+    </script>
+</body>
+</html>
